@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Dars Tayyorlovchi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f8f9fa;
+      text-align: center;
+    }
+    textarea {
+      width: 80%;
+      height: 100px;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 AI Dars Tayyorlovchi</h1>
+  <textarea id="topic" placeholder="Mavzu kiriting... (masalan: Issiqlik o'tkazuvchanlik)"></textarea><br>
+  <button onclick="send('summary')">📄 Konspekt</button>
+  <button onclick="send('quiz')">📝 Test</button>
+  <button onclick="send('slides')">🎞 Slayd</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function send(type) {
+      const topic = document.getElementById("topic").value;
+      const resDiv = document.getElementById("result");
+      resDiv.textContent = "⏳ AI javob tayyorlamoqda...";
+      try {
+        const res = await fetch("/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, type })
+        });
+        const data = await res.json();
+        resDiv.textContent = data.reply;
+      } catch (err) {
+        resDiv.textContent = "❌ Xatolik: Javob olishda muammo yuz berdi.";
+      }
+    }
+  </script>
+</body>
+</html>
